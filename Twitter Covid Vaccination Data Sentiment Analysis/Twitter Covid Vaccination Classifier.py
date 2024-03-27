@@ -10,6 +10,8 @@ from sklearn.metrics import classification_report, confusion_matrix, ConfusionMa
     recall_score
 
 pd.set_option('max_colwidth', 500)
+
+
 # %matplotlib inline
 
 # functions
@@ -87,13 +89,15 @@ train_dataset.drop(['Unnamed: 0'], axis=1, inplace=True)
 indices_to_remove_0 = train_dataset.index[train_dataset['label'] == 0].tolist()
 
 # Select 10 of these indices to remove (make sure you have at least 10)
-indices_to_remove_0 = indices_to_remove_0[:int((len(train_dataset.index[train_dataset['label'] == 0]) - len(train_dataset.index[train_dataset['label'] == 1])) )]
+indices_to_remove_0 = indices_to_remove_0[:int(
+    (len(train_dataset.index[train_dataset['label'] == 0]) - len(train_dataset.index[train_dataset['label'] == 1])))]
 # indices_to_remove_0 = indices_to_remove_0[:1000]
 # Drop these rows from the DataFrame
 train_dataset = train_dataset.drop(indices_to_remove_0)
 
 indices_to_remove_2 = train_dataset.index[train_dataset['label'] == 2].tolist()
-indices_to_remove_2 = indices_to_remove_2[:int((len(train_dataset.index[train_dataset['label'] == 2]) - len(train_dataset.index[train_dataset['label'] == 1])))]
+indices_to_remove_2 = indices_to_remove_2[:int(
+    (len(train_dataset.index[train_dataset['label'] == 2]) - len(train_dataset.index[train_dataset['label'] == 1])))]
 # indices_to_remove_2 = indices_to_remove_2[:1000]
 #
 train_dataset = train_dataset.drop(indices_to_remove_2)
@@ -110,7 +114,7 @@ test_dataset.drop(['Unnamed: 0'], axis=1, inplace=True)
 # Data visualization
 trainLabelCounts = train_dataset.groupby('label').count()
 trainLabelCounts.plot.bar(rot=0)
-plt.show()
+# plt.show()
 
 # Text preprocessing
 train_dataset['tweet'] = train_dataset['tweet'].apply(
@@ -126,7 +130,7 @@ train_dataset['tweet'] = train_dataset['tweet'].apply(lambda tweet: remove_stopw
 test_dataset['tweet'] = test_dataset['tweet'].apply(lambda tweet: remove_stopwords(tweet, stopwords.words("english")))
 # print(train_dataset)
 
-# Model 1: Count vectorizer and Logistic Regression
+# Model 1: Count vectorizer and Machine Learning
 # Text vectorization
 # vectorizer = CountVectorizer().fit(train_dataset['tweet'].values)
 # X_train = vectorizer.transform(train_dataset['tweet'].values)
@@ -143,7 +147,7 @@ test_dataset['tweet'] = test_dataset['tweet'].apply(lambda tweet: remove_stopwor
 # evaluate_model(clf, X_test, y_test)
 
 
-# Model 2: Count vectorizer with min_df=4, max_df=0.3 and Logistic Regression
+# Model 2: Count vectorizer with min_df=4, max_df=0.3 and Machine Learning
 # vectorizer = CountVectorizer(min_df=4, max_df=0.3).fit(train_dataset['tweet'].values)
 # X_train = vectorizer.transform(train_dataset['tweet'].values)
 # y_train = train_dataset['label'].values
@@ -154,7 +158,7 @@ test_dataset['tweet'] = test_dataset['tweet'].apply(lambda tweet: remove_stopwor
 # evaluate_model(clf, X_test, y_test)
 
 
-# Model 3: Tf-Idf vectorizer with min_df=4, max_df=0.3 and Logistic Regression
+# Model 3: Tf-Idf vectorizer with min_df=4, max_df=0.3 and Machine Learning
 # vectorizer = TfidfVectorizer(min_df=4, max_df=0.3).fit(train_dataset['tweet'].values)
 # X_train = vectorizer.transform(train_dataset['tweet'].values)
 # y_train = train_dataset['label'].values
@@ -165,32 +169,40 @@ test_dataset['tweet'] = test_dataset['tweet'].apply(lambda tweet: remove_stopwor
 # evaluate_model(clf, X_test, y_test)
 
 
-# Best model: Tf-Idf vectorizer with min_df=4, max_df=0.3 and Logistic Regression with C=1.83
+# Best model: Tf-Idf vectorizer with min_df=4, max_df=0.3 and Machine Learning with C=1.83
 vectorizer = TfidfVectorizer(min_df=4, max_df=0.3).fit(train_dataset['tweet'].values)
 X_train = vectorizer.transform(train_dataset['tweet'].values)
+# my_tweet = remove_stopwords(text_preprocessing("Seeing the numbers decline in COVID cases as vaccine distribution increases is such a relief. #VaccinesWork"), stopwords.words("english"))
+# print(vectorizer.transform([my_tweet]))
 y_train = train_dataset['label'].values
 X_test = vectorizer.transform(test_dataset['tweet'].values)
 y_test = test_dataset['label'].values
 clf = LogisticRegression(max_iter=5000, tol=1e-8, C=1.83, multi_class='multinomial')
-plot_learning_curve(X_train, y_train, X_test, y_test, clf, np.linspace(10, X_train.shape[0], 15, dtype=np.int64), "Best Model")
+plot_learning_curve(X_train, y_train, X_test, y_test, clf, np.linspace(10, X_train.shape[0], 15, dtype=np.int64),
+                    "Best Model")
 evaluate_model(clf, X_test, y_test)
 
 # self test
 tweets = np.array(["Fuck these vaccines. Lunatic thoughts from those thinking those Pfizers can cure!",
-"COVID vaccines are now available for all age groups. Check your local health department for more information.",
-"Reading up on the latest research regarding COVID vaccines. It's interesting to see science in progress.",
-"There's a town hall meeting about COVID vaccines tonight. It's a good opportunity to hear different perspectives.",
-"I'm really skeptical about these COVID vaccines. I don't think enough time has passed to understand the long-term effects.",
-"Every time I see a news story about COVID vaccines, I can't help but worry about the side effects they're not telling us about.",
-"My trust in the COVID vaccines is low. I feel like there's a lot of pressure to get them without space for open dialogue about concerns.",
-"Just got my COVID vaccine and feeling great! So grateful for the science and healthcare workers that made this possible.",
-"Seeing the numbers decline in COVID cases as vaccine distribution increases is such a relief. #VaccinesWork",
-"I was hesitant at first, but after doing my research, I'm fully on board with the COVID vaccines. Protecting my community feels good!",
-"Required vaccines for school: Parents and guardians of children with school exclusion letters now have an..."
-])
+                   "COVID vaccines are now available for all age groups. Check your local health department for more information.",
+                   "Reading up on the latest research regarding COVID vaccines. It's interesting to see science in progress.",
+                   "There's a town hall meeting about COVID vaccines tonight. It's a good opportunity to hear different perspectives.",
+                   "I'm really skeptical about these COVID vaccines. I don't think enough time has passed to understand the long-term effects.",
+                   "Every time I see a news story about COVID vaccines, I can't help but worry about the side effects they're not telling us about.",
+                   "My trust in the COVID vaccines is low. I feel like there's a lot of pressure to get them without space for open dialogue about concerns.",
+                   "Just got my COVID vaccine and feeling great! So grateful for the science and healthcare workers that made this possible.",
+                   "Seeing the numbers decline in COVID cases as vaccine distribution increases is such a relief. #VaccinesWork",
+                   "I was hesitant at first, but after doing my research, I'm fully on board with the COVID vaccines. Protecting my community feels good!",
+                   "Required vaccines for school: Parents and guardians of children with school exclusion letters now have an..."
+                   ])
 labels = np.array([1, 0, 0, 0, 1, 1, 1, 2, 2, 2, 0])
-vectorized_tweet = vectorizer.transform(tweets)
+df = pd.DataFrame(tweets, columns=['tweet'])
+df["tweet"] = df["tweet"].apply(lambda tweet: remove_stopwords(tweet, stopwords.words("english")))
+# vectorizer = TfidfVectorizer(min_df=4, max_df=0.3).fit(df['tweet'].values)
+vectorized_tweet = vectorizer.transform(df["tweet"].values)
 
 # print(clf.coef_)
 pred = clf.predict(vectorized_tweet)
 print(pred.tolist())
+# my_tweet = remove_stopwords(text_preprocessing("Seeing the numbers decline in COVID cases as vaccine distribution increases is such a relief. #VaccinesWork"), stopwords.words("english"))
+# print(my_tweet)
