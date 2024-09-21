@@ -27,6 +27,10 @@ In the development phase, various hyperparameters were tuned to optimize model p
 
 This project was developed to focus solely on the Softmax Regression model, detailing its setup, performance, and educational purpose.
 
+
+## Step-by-step code on Google Colab
+- https://colab.research.google.com/drive/1s0ZUSAwpQQZE4mYfmSP1suZgglRGHpu7?usp=sharing
+
 ---
 
 
